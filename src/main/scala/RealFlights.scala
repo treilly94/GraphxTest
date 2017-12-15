@@ -1,3 +1,5 @@
+import org.apache.spark.graphx.VertexId
+import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
 object RealFlights {
@@ -31,7 +33,15 @@ object RealFlights {
     val flights: DataFrame = spark.read.options(optionMap)
       .csv("./src/main/resources/realFlights/394552408_T_ONTIME.csv")
       .drop("_c17")
+    // Get unique airports
+    val airportsRdd: RDD[(VertexId, String)] =
+      flights.rdd
+        .map(row => (row(5).asInstanceOf[Number].longValue, row(6).asInstanceOf[String])).distinct()
+
+
     // Create graph
+    airportsRdd.take(10).foreach(println(_))
+
     flights
   }
 
