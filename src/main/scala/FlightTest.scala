@@ -10,10 +10,23 @@ object FlightTest {
     val spark: SparkSession = sparkCreator()
     // Make graph
     val graph: Graph[String, Long] = getGraph(spark)
-    // Print all verticies
+
+
+    println("All verticies")
     graph.vertices.foreach(println(_))
-    // Print all verticies where name = SFO
+
+    println("All verticies where the second char of name is F")
     graph.vertices.filter { case (id, name) => name(1) == 'F'}.foreach(println(_))
+
+    println("All edges where the distance is greater than 1000")
+    graph.edges.filter(e => e.attr > 1000).foreach(println(_))
+
+    println("All triplets")
+    graph.triplets.foreach(println(_))
+
+    println("All triplets in order of distance")
+    graph.triplets.sortBy(t => t.attr, ascending = false).foreach(println(_))
+
   }
 
 
