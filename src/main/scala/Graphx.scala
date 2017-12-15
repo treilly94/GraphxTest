@@ -11,12 +11,12 @@ object Graphx {
     sc.setLogLevel("ERROR")
     // Create verticies RDD
     val users: RDD[(VertexId, (String, String))] =
-      sc.parallelize(Array((3L, ("rxin", "student")), (7L, ("jgonzal", "postdoc")),
-                           (5L, ("franklin", "prof")), (2L, ("istoica", "prof"))))
+      sc.parallelize(Array((1L, ("keith", "student")), (2L, ("bob", "postdoc")),
+                           (3L, ("geoff", "prof")), (4L, ("dave", "prof"))))
     // Create edges RDD
     val relationships: RDD[Edge[String]] =
-      sc.parallelize(Array(Edge(3L, 7L, "collab"),    Edge(5L, 3L, "advisor"),
-                           Edge(2L, 5L, "colleague"), Edge(5L, 7L, "pi")))
+      sc.parallelize(Array(Edge(1L, 2L, "collab"),    Edge(2L, 4L, "advisor"),
+                           Edge(3L, 4L, "colleague"), Edge(1L, 3L, "nemesis")))
     // Create default user
     val defaultUser: (String, String) = ("John Doe", "Missing")
     // build the graph
