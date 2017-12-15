@@ -7,21 +7,9 @@ object FlightTest {
 
   def main(args: Array[String]): Unit = {
     // Create sparksession and set loglevel
-    val spark : SparkSession = sparkCreator()
-    // Read in data
-    val optionMap: Map[String, String] = Map("header" -> "true", "inferSchema" -> "true")
-    val airports: DataFrame = spark.read.options(optionMap).csv("./src/main/resources/flights/airports.csv")
-    val routes: DataFrame =  spark.read.options(optionMap).csv("./src/main/resources/flights/routes.csv")
-    // Create graph
-    val airportsVertices: RDD[(VertexId, String)] = airports.rdd.map(row => (row(0).asInstanceOf[Number].longValue,
-                                                                             row(1).asInstanceOf[String]))
-    val routesEdges: RDD[Edge[Long]] = routes.rdd.map(row => Edge(row(0).asInstanceOf[Number].longValue,
-                                                                  row(1).asInstanceOf[Number].longValue,
-                                                                  row(2).asInstanceOf[Number].longValue))
-
-    val defaultAirport: String = "Missing Airport"
-
-    val graph: Graph[String, Long] = Graph(airportsVertices, routesEdges, defaultAirport)
+    val spark: SparkSession = sparkCreator()
+    // Make graph
+    val graph: Graph[String, Long] = getGraph(spark)
     // Print all verticies
     graph.vertices.foreach(println(_))
     // Print all verticies where name = SFO
@@ -37,5 +25,23 @@ object FlightTest {
       .getOrCreate
     spark.sparkContext.setLogLevel("ERROR")
     spark
+  }
+
+
+  def getGraph(spark: SparkSession): Graph[String, Long] = {
+    // Read in data
+    val optionMap: Map[String, String] = Map("header" -> "true", "inferSchema" -> "true")
+    val airports: DataFrame = spark.read.options(optionMap).csv("./src/main/resources/flights/airports.csv")
+    val routes: DataFrame =  spark.read.options(optionMap).csv("./src/main/resources/flights/routes.csv")
+    // Create graph
+    val airportsVertices: RDD[(VertexId, String)] = airports.rdd.map(row => (row(0).asInstanceOf[Number].longValue,
+      row(1).asInstanceOf[String]))
+    val routesEdges: RDD[Edge[Long]] = routes.rdd.map(row => Edge(row(0).asInstanceOf[Number].longValue,
+      row(1).asInstanceOf[Number].longValue,
+      row(2).asInstanceOf[Number].longValue))
+
+    val defaultAirport: String = "Missing Airport"
+
+    Graph(airportsVertices, routesEdges, defaultAirport)
   }
 }
