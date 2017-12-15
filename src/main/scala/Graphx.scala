@@ -1,4 +1,4 @@
-import org.apache.spark.graphx.{Edge, Graph, VertexId}
+import org.apache.spark.graphx.{Edge, Graph, VertexId, VertexRDD}
 import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkConf, SparkContext}
 
@@ -33,5 +33,10 @@ object Graphx {
     val facts: RDD[String] =
       graph.triplets.map(triplet => triplet.srcAttr._1 + " is the " + triplet.attr + " of " + triplet.dstAttr._1)
     facts.collect().foreach(println(_))
+
+    // Graph operators
+    val inDegrees: VertexRDD[Int] = graph.inDegrees
+
+    inDegrees.collect().foreach(println(_))
   }
 }
