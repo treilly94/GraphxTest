@@ -2,7 +2,7 @@ import org.apache.spark.graphx.{Edge, Graph, VertexId}
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
-object FlightTest {
+object FakeFlights {
 
 
   def main(args: Array[String]): Unit = {
@@ -44,8 +44,8 @@ object FlightTest {
   def getGraph(spark: SparkSession): Graph[String, Long] = {
     // Read in data
     val optionMap: Map[String, String] = Map("header" -> "true", "inferSchema" -> "true")
-    val airports: DataFrame = spark.read.options(optionMap).csv("./src/main/resources/flights/airports.csv")
-    val routes: DataFrame =  spark.read.options(optionMap).csv("./src/main/resources/flights/routes.csv")
+    val airports: DataFrame = spark.read.options(optionMap).csv("./src/main/resources/fakeFlights/airports.csv")
+    val routes: DataFrame =  spark.read.options(optionMap).csv("./src/main/resources/fakeFlights/routes.csv")
     // Create graph
     val airportsVertices: RDD[(VertexId, String)] = airports.rdd.map(row => (row(0).asInstanceOf[Number].longValue,
       row(1).asInstanceOf[String]))
