@@ -7,7 +7,7 @@ object Graphx {
   def main(args: Array[String]): Unit = {
     // Create spark context
     val conf = new SparkConf().setAppName("SparkTests").setMaster("local[2]")
-    var sc: SparkContext = new SparkContext(conf)
+    val sc: SparkContext = new SparkContext(conf)
     sc.setLogLevel("ERROR")
     // Create verticies RDD
     val users: RDD[(VertexId, (String, String))] =
