@@ -9,9 +9,9 @@ object RealFlights {
     // Create sparksession and set loglevel
     val spark: SparkSession = sparkCreator()
     // Make graph
-    val graph = getGraph(spark)
-
-    graph.triplets.foreach(println(_))
+    val graph: Graph[String, Long] = getGraph(spark)
+    // Make stats
+    stats(graph)
   }
 
 
@@ -51,6 +51,20 @@ object RealFlights {
     // Create graph
     val default: String = "Missing Airport"
     Graph(airportsRdd, routesRdd, default)
+  }
+
+
+  def stats(graph: Graph[String, Long]): Unit = {
+    println("Count the airports")
+    println(graph.numVertices)
+    println("Count of routes")
+    println(graph.numEdges)
+    println("Ten longest routes")
+    graph.triplets
+      .distinct()
+      .sortBy(_.attr, ascending = false)
+      .take(20)
+      .foreach(println(_))
   }
 
 }
