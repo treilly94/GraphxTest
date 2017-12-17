@@ -36,10 +36,15 @@ object RealFlights {
     // Get unique airports
     val airportsRdd: RDD[(VertexId, String)] =
       flights.rdd
-        .map(row => (row(5).asInstanceOf[Number].longValue, row(6).asInstanceOf[String])).distinct()
-
+        .map(row => (row(5).asInstanceOf[Number].longValue, row(6).asInstanceOf[String]))
+          .union(flights
+            .rdd
+            .map(row => (row(7).asInstanceOf[Number].longValue, row(8).asInstanceOf[String]))
+          ).distinct()
+    // Get routes
 
     // Create graph
+    println("Airports")
     airportsRdd.take(10).foreach(println(_))
 
     flights
