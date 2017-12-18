@@ -63,7 +63,25 @@ object RealFlights {
     graph.triplets
       .distinct()
       .sortBy(_.attr, ascending = false)
-      .take(20)
+      .take(10)
+      .foreach(println(_))
+    println("PageRank")
+    val ranks = graph.pageRank(0.0001).vertices
+    ranks.join(graph.vertices)
+      .sortBy(_._2._1, ascending = false)
+      .take(10)
+      .foreach(println(_))
+    println("Most inbound traffic")
+    graph.inDegrees
+      .join(graph.vertices)
+      .sortBy(_._2._1, ascending = false)
+      .take(5)
+      .foreach(println(_))
+    println("Most outbound traffic")
+    graph.outDegrees
+      .join(graph.vertices)
+      .sortBy(_._2._1, ascending = false)
+      .take(5)
       .foreach(println(_))
   }
 
