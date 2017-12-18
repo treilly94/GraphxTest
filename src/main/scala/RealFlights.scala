@@ -57,30 +57,51 @@ object RealFlights {
   def stats(graph: Graph[String, Long]): Unit = {
     println("Count the airports")
     println(graph.numVertices)
+
     println("Count of routes")
     println(graph.numEdges)
+
     println("Ten longest routes")
     graph.triplets
       .distinct()
       .sortBy(_.attr, ascending = false)
       .take(10)
       .foreach(println(_))
+
     println("PageRank")
     val ranks = graph.pageRank(0.0001).vertices
     ranks.join(graph.vertices)
       .sortBy(_._2._1, ascending = false)
       .take(10)
       .foreach(println(_))
+
     println("Most inbound traffic")
     graph.inDegrees
       .join(graph.vertices)
       .sortBy(_._2._1, ascending = false)
       .take(5)
       .foreach(println(_))
+
     println("Most outbound traffic")
     graph.outDegrees
       .join(graph.vertices)
       .sortBy(_._2._1, ascending = false)
+      .take(5)
+      .foreach(println(_))
+
+    println("Highest in/out ratio")
+    val ratio =
+      graph.inDegrees
+      .join(graph.outDegrees)
+      .join(graph.vertices)
+      .map(x => (x._2._1._1.toDouble/x._2._1._2.toDouble, x._2._2))
+
+    ratio.sortBy(_._1, ascending = false)
+      .take(5)
+      .foreach(println(_))
+
+    println("Lowest in/out ratio")
+    ratio.sortBy(_._1)
       .take(5)
       .foreach(println(_))
   }
