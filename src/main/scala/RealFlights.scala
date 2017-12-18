@@ -62,7 +62,8 @@ object RealFlights {
     println(graph.numEdges)
 
     println("Ten longest routes")
-    graph.triplets
+    graph
+      .triplets
       .distinct()
       .sortBy(_.attr, ascending = false)
       .take(10)
@@ -70,20 +71,23 @@ object RealFlights {
 
     println("PageRank")
     val ranks = graph.pageRank(0.0001).vertices
-    ranks.join(graph.vertices)
+    ranks
+      .join(graph.vertices)
       .sortBy(_._2._1, ascending = false)
       .take(10)
       .foreach(println(_))
 
     println("Most inbound traffic")
-    graph.inDegrees
+    graph
+      .inDegrees
       .join(graph.vertices)
       .sortBy(_._2._1, ascending = false)
       .take(5)
       .foreach(println(_))
 
     println("Most outbound traffic")
-    graph.outDegrees
+    graph
+      .outDegrees
       .join(graph.vertices)
       .sortBy(_._2._1, ascending = false)
       .take(5)
@@ -91,10 +95,11 @@ object RealFlights {
 
     println("Highest in/out ratio")
     val ratio =
-      graph.inDegrees
-      .join(graph.outDegrees)
-      .join(graph.vertices)
-      .map(x => (x._2._1._1.toDouble/x._2._1._2.toDouble, x._2._2))
+      graph
+        .inDegrees
+        .join(graph.outDegrees)
+        .join(graph.vertices)
+        .map(x => (x._2._1._1.toDouble/x._2._1._2.toDouble, x._2._2))
 
     ratio.sortBy(_._1, ascending = false)
       .take(5)
